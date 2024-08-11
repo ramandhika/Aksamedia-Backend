@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class EmployeeController extends Controller
 {
@@ -60,10 +61,14 @@ class EmployeeController extends Controller
             'phone' => 'required',
             'division' => 'required|exists:divisions,id',
             'position' => 'required',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:5120',
         ]);
 
-        $imagePath = $request->file('image') ? $request->file('image')->store('images') : null;
+        $imagePath = $request->file('image') ? $request->file('image')->store('public/Employee') : null;
+
+        if ($imagePath) {
+            $imagePath = str_replace('public/', 'storage/', $imagePath);
+        }
 
         Employee::create([
             'name' => $request->name,
@@ -75,7 +80,7 @@ class EmployeeController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Employee created successfully',
+            'message' => 'Data karyawan berhasil ditambahkan',
         ]);
     }
 
@@ -86,11 +91,12 @@ class EmployeeController extends Controller
             'phone' => 'required',
             'division' => 'required|exists:divisions,id',
             'position' => 'required',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:5120',
         ]);
 
         if ($request->file('image')) {
-            $imagePath = $request->file('image')->store('images');
+            $imagePath = $request->file('image')->store('public/Employee');
+            $imagePath = str_replace('public/', 'storage/', $imagePath);
             $employee->update(['image' => $imagePath]);
         }
 
@@ -98,17 +104,21 @@ class EmployeeController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Employee updated successfully',
+            'message' => 'Data karyawan berhasil diubah',
         ]);
     }
 
     public function destroy(Employee $employee)
     {
+        if ($employee->image) {
+            Storage::delete(str_replace('storage/', 'public/', $employee->image));
+        }
+
         $employee->delete();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Employee deleted successfully',
+            'message' => 'Data karyawan berhasil dihapus',
         ]);
     }
 }
