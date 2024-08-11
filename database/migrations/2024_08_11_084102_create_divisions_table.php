@@ -11,16 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('employees', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('image')->nullable();
+        Schema::create('divisions', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->string('name');
-            $table->string('phone');
-            $table->uuid('division_id');
-            $table->string('position');
             $table->timestamps();
-
-            $table->foreign('division_id')->references('id')->on('divisions');
         });
     }
 
