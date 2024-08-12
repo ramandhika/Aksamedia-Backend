@@ -50,6 +50,11 @@ class EmployeeController extends Controller
                 'halaman_terakhir' => $employees->lastPage(),
                 'per_halaman' => $employees->perPage(),
                 'total' => $employees->total(),
+                'links' => [
+                    'halaman_sebelumnya' => $employees->previousPageUrl(),
+                    'halaman_sekarang' => $employees->url($employees->currentPage()),
+                    'halaman_selanjutnya' => $employees->nextPageUrl(),
+                ],
             ],
         ], 200);
     }

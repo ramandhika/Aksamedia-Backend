@@ -9,6 +9,9 @@ class Employee extends Model
 {
     use HasFactory;
 
+    protected $keyType = 'string';
+    public $incrementing = false;
+
     protected $fillable = ['name', 'phone', 'division_id', 'position', 'image'];
 
     protected static function boot()

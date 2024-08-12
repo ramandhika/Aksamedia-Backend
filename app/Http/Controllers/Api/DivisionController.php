@@ -36,6 +36,11 @@ class DivisionController extends Controller
                 'halaman_terakhir' => $divisions->lastPage(),
                 'per_halaman' => $divisions->perPage(),
                 'total' => $divisions->total(),
+                'links' => [
+                    'halaman_sebelumnya' => $divisions->previousPageUrl(),
+                    'halaman_sekarang' => $divisions->url($divisions->currentPage()),
+                    'halaman_selanjutnya' => $divisions->nextPageUrl(),
+                ],
             ],
         ], 200);
     }
